@@ -6,6 +6,8 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 if [[ -d /sys/firmware/efi ]]; then
   BOOT_MODE="uefi"
 else
@@ -39,6 +41,7 @@ else
 fi
 
 echo
+echo "Script dir: $SCRIPT_DIR"
 echo "Target disk: $DISK"
 echo "BIOS boot partition: $BIOS_PART"
 echo "EFI partition: $EFI_PART"
@@ -87,68 +90,14 @@ mount "$EFI_PART" /mnt/boot
 echo "[8] Generate hardware config..."
 nixos-generate-config --root /mnt
 
-echo "[9] Write configuration.nix..."
+echo "[9] Copy NixOS config..."
+cp "$SCRIPT_DIR/configuration.nix" /mnt/etc/nixos/configuration.nix
+
 if [[ "$BOOT_MODE" == "uefi" ]]; then
-  BOOT_CFG='
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.efiSupport = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.useOSProber = true;'
+  cp "$SCRIPT_DIR/boot-uefi.nix" /mnt/etc/nixos/boot.nix
 else
-  BOOT_CFG="
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = \"$DISK\";
-  boot.loader.grub.useOSProber = true;"
+  sed "s|__DISK__|$DISK|g" "$SCRIPT_DIR/boot-bios.nix.in" > /mnt/etc/nixos/boot.nix
 fi
-
-cat > /mnt/etc/nixos/configuration.nix <<EOF
-{ config, pkgs, ... }:
-
-{
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
-
-  time.timeZone = "Europe/Riga";
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  services.xserver.xkb.layout = "us";
-
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  users.users.user = {
-    isNormalUser = true;
-    description = "user";
-    extraGroups = [ "wheel" "networkmanager" ];
-  };
-
-  programs.firefox.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    curl
-  ];
-$BOOT_CFG
-
-  system.stateVersion = "25.11";
-}
-EOF
 
 echo "[10] Check generated LUKS config..."
 grep -n "boot.initrd.luks.devices" /mnt/etc/nixos/hardware-configuration.nix || true
