@@ -29,12 +29,25 @@
   services.dbus.enable = true;
   programs.dconf.enable = true;
 
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
   xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+  xdg.portal.extraPortals = with pkgs; [
+    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-gtk
+  ];
 
   environment.systemPackages = with pkgs; [
     kitty waybar wofi dunst grim slurp wl-clipboard
     git vim wget curl
+    pavucontrol
   ];
 
   system.stateVersion = "25.11";
