@@ -92,6 +92,7 @@ nixos-generate-config --root /mnt
 
 echo "[9] Copy NixOS config..."
 cp "$SCRIPT_DIR/configuration.nix" /mnt/etc/nixos/configuration.nix
+cp -r "$SCRIPT_DIR/modules" /mnt/etc/nixos/
 
 if [[ "$BOOT_MODE" == "uefi" ]]; then
   cp "$SCRIPT_DIR/boot-uefi.nix" /mnt/etc/nixos/boot.nix
