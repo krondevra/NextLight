@@ -103,10 +103,16 @@ fi
 echo "[10] Check generated LUKS config..."
 grep -n "boot.initrd.luks.devices" /mnt/etc/nixos/hardware-configuration.nix || true
 
-echo "[11] Install..."
+echo "[11] Copy dotfiles..."
+mkdir -p /mnt/home/user
+cp -r "$SCRIPT_DIR/dotfiles/." /mnt/home/user/
+
+chown -R 1000:100 /mnt/home/user
+
+echo "[12] Install..."
 nixos-install
 
-echo "[12] Set user password..."
+echo "[13] Set user password..."
 nixos-enter --root /mnt -c 'passwd user'
 
 echo "Done. Remove installer media, then reboot."

@@ -10,6 +10,7 @@
     ./modules/sound.nix
     ./modules/services.nix
     ./modules/packages.nix
+    ./modules/packages-extra.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
