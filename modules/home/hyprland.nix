@@ -12,7 +12,7 @@
       ];
 
       "$terminal" = "kitty";
-      "$fileManager" = "dolphin";
+      "$fileManager" = "kitty -e yazi";
       "$menu" = "wofi --show drun";
 
       env = [

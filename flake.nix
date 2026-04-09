@@ -16,7 +16,7 @@
           ./modules/sound.nix
           ./modules/services.nix
           ./modules/packages.nix
-          ./modules/packages-extra.nix
+          #./modules/packages-extra.nix
 
           home-manager.nixosModules.home-manager
 
@@ -40,6 +40,11 @@
             home-manager.users.user = {
               imports = [
                 ./modules/home/hyprland.nix
+                ./modules/home/kitty.nix
+                ./modules/home/mpv.nix
+                ./modules/home/fastfetch.nix
+                ./modules/home/zsh.nix
+                ./modules/home/starship.nix
               ];
               home.stateVersion = "25.11";
             };
