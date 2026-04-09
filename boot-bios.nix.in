@@ -1,5 +1,0 @@
-{
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "__DISK__";
-  boot.loader.grub.useOSProber = false;
-}

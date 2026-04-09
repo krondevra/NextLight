@@ -1,7 +1,10 @@
 { pkgs, ... }:
 
 {
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+  enable = true;
+  package = pkgs.hyprland;
+};
 
   services.greetd.enable = true;
   services.greetd.settings.default_session = {

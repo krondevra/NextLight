@@ -14,10 +14,13 @@
     slurp                     # Screen Region Selector
     swayimg                   # Wayland Image Viewer
     tree                      # Directory Tree Viewer
-    vim                       # Text Editor
+    neovim                    # Text Editor
+    yazi                      # File Manager
     waybar                    # Status Bar
     wget                      # File Downloader
     wl-clipboard              # Clipboard Tool
     wofi                      # Application Launcher
+    networkmanagerapplet
+    blueman
   ];
 }
