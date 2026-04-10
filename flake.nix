@@ -44,6 +44,7 @@
                 ./modules/home/mpv.nix
                 ./modules/home/fastfetch.nix
                 ./modules/home/zsh.nix
+                ./modules/home/waybar.nix
               ];
               home.stateVersion = "25.11";
             };
