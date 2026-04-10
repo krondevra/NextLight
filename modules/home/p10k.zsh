@@ -25,7 +25,6 @@
     os_icon
     dir
     vcs
-    prompt_char
   )
 
   # Right side like in p10k wizard presets
