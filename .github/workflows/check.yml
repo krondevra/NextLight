@@ -15,6 +15,9 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - name: render disko-config.nix + boot.nix for a fake disk (${{ matrix.boot_mode }})
         run: |
-          ./scripts/render-boot-config.sh . /dev/vda ${{ matrix.boot_mode }} .
+          tmp="$(mktemp -d)"
+          ./scripts/render-boot-config.sh . /dev/vda ${{ matrix.boot_mode }} "$tmp"
+          cp "$tmp/disko-config.nix" ./disko-config.nix
+          cp "$tmp/boot.nix" ./boot.nix
       - name: nix flake check
         run: nix flake check --no-build
