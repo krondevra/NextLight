@@ -14,6 +14,7 @@
       modules =
         [
           ./modules/user.nix
+          ./modules/hardware.nix
           ./modules/desktop-hyprland.nix
           ./modules/sound.nix
           ./modules/services.nix
