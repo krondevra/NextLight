@@ -102,7 +102,8 @@ in
           timezone = "Europe/Riga";
           interval = 1;
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          format = "{:%H:%M:%S\n%d.%m.%Y}";
+          format = "{:%H:%M:%S}";
+          format-alt = "{:%d.%m.%Y}";
         };
 
         cpu = {
