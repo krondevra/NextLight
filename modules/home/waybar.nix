@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  igpuScript = pkgs.writeShellScript "waybar-igpu.sh" ''
+  gpuScript = pkgs.writeShellScript "waybar-gpu.sh" ''
     GPU_PATH="/sys/class/drm/card0/device/gpu_busy_percent"
 
     if [ -r "$GPU_PATH" ]; then
@@ -9,17 +9,6 @@ let
       printf '%s\n' "$usage"
     else
       printf '0\n'
-    fi
-  '';
-
-  egpuScript = pkgs.writeShellScript "waybar-egpu.sh" ''
-    GPU_PATH="/sys/class/drm/card1/device/gpu_busy_percent"
-
-    if [ -r "$GPU_PATH" ]; then
-      usage=$(${pkgs.coreutils}/bin/cat "$GPU_PATH")
-      printf '{"text":"%s%%","class":"connected"}\n' "$usage"
-    else
-      printf '{"text":"","class":"disconnected"}\n'
     fi
   '';
 
@@ -67,15 +56,12 @@ in
           "temperature"
           "memory"
           "cpu"
-          "custom/igpu"
-          "custom/egpu"
+          "custom/gpu"
         ];
 
         modules-right = [
           "battery"
           "pulseaudio"
-          "network"
-          "power-profiles-daemon"
           "backlight"
           "keyboard-state"
           "hyprland/language"
@@ -114,8 +100,7 @@ in
         clock = {
           timezone = "Europe/Riga";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          format = "{:%H:%M}";
-          format-alt = "{:%Y-%m-%d}";
+          format = "{:%H:%M\n%Y-%m-%d}";
         };
 
         cpu = {
@@ -125,6 +110,7 @@ in
 
         memory = {
           format = " {}%";
+          tooltip-format = "{used:0.1f} GiB / {total:0.1f} GiB";
         };
 
         temperature = {
@@ -151,34 +137,12 @@ in
           format-icons = [ "" "" "" "" "" ];
         };
 
-        "power-profiles-daemon" = {
-          format = "{icon}";
-          tooltip-format = "Power profile: {profile}\nDriver: {driver}";
-          tooltip = true;
-          format-icons = {
-            default = "";
-            performance = "";
-            balanced = "";
-            power-saver = "";
-          };
-        };
-
-        network = {
-          format-wifi = "";
-          format-ethernet = "{ipaddr}/{cidr} ";
-          tooltip-format = "{ifname} via {gwaddr} ";
-          format-linked = "{ifname} (No IP) ";
-          format-disconnected = "Disconnected ⚠";
-          format-alt = "{ifname}: {ipaddr}/{cidr}";
-        };
-
         pulseaudio = {
-          format = "{icon} {volume}% {format_source}";
-          format-bluetooth = "{icon} {volume}% {format_source}";
-          format-bluetooth-muted = "{icon}  {format_source}";
-          format-muted = "󰝟 {format_source}";
-          format-source = " {volume}%";
-          format-source-muted = "";
+          format = "{icon} {volume}%";
+          format-bluetooth = "{icon} {volume}%";
+          format-bluetooth-muted = "{icon} ";
+          format-muted = "󰝟";
+          tooltip-format = "Volume: {volume}%";
           format-icons = {
             headphone = "";
             hands-free = "";
@@ -203,18 +167,10 @@ in
           };
         };
 
-        "custom/igpu" = {
-          exec = "${igpuScript}";
+        "custom/gpu" = {
+          exec = "${gpuScript}";
           interval = 2;
-          format = "iGPU {}";
-          tooltip = false;
-        };
-
-        "custom/egpu" = {
-          exec = "${egpuScript}";
-          interval = 2;
-          return-type = "json";
-          format = "eGPU {text}";
+          format = "󰢮 {}%";
           tooltip = false;
         };
       };
@@ -233,10 +189,8 @@ in
 
       #clock,
       #battery,
-      #network,
       #pulseaudio,
       #tray,
-      #power-profiles-daemon,
       #backlight,
       #keyboard-state,
       #language,
@@ -247,8 +201,7 @@ in
       #cpu,
       #memory,
       #temperature,
-      #custom-igpu,
-      #custom-egpu.connected {
+      #custom-gpu {
         padding: 0 8px;
         margin: 0;
         border-radius: 6px;
@@ -259,15 +212,7 @@ in
       #memory { background: rgba(155,89,182,0.25); }
       #temperature { background: rgba(240,147,43,0.25); }
       #temperature.critical { background: rgba(235,77,75,0.35); }
-      #custom-igpu { background: rgba(80,120,200,0.25); }
-      #custom-egpu.connected { background: rgba(200,120,80,0.25); }
-
-      #custom-egpu.disconnected {
-        opacity: 0;
-        padding: 0;
-        margin: 0;
-        min-width: 0;
-      }
+      #custom-gpu { background: rgba(80,120,200,0.25); }
 
       #clock {
         background: rgba(100,114,125,0.35);
