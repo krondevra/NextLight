@@ -7,8 +7,14 @@ on:
 jobs:
   flake-check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        boot_mode: [uefi, bios]
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
+      - name: render disko-config.nix + boot.nix for a fake disk (${{ matrix.boot_mode }})
+        run: |
+          ./scripts/render-boot-config.sh . /dev/vda ${{ matrix.boot_mode }} .
       - name: nix flake check
         run: nix flake check --no-build

@@ -41,17 +41,10 @@ if [[ "$CONFIRM" != "YES" ]]; then
   exit 1
 fi
 
-echo "[2] Rendering disko config for this disk..."
-BIOS_BOOT_PARTITION=""
-if [[ "$BOOT_MODE" == "bios" ]]; then
-  BIOS_BOOT_PARTITION='bios-boot = {
-          size = "1M";
-          type = "EF02";
-        };'
-fi
-DISKO_CONFIG="$(mktemp --suffix=.nix)"
-awk -v block="$BIOS_BOOT_PARTITION" '{gsub(/##BIOS_BOOT_PARTITION##/, block); print}' \
-  "$SCRIPT_DIR/disko-config.nix" | sed "s|@DISK@|$DISK|g" > "$DISKO_CONFIG"
+echo "[2] Rendering disko + boot config for this disk..."
+RENDER_DIR="$(mktemp -d)"
+"$SCRIPT_DIR/scripts/render-boot-config.sh" "$SCRIPT_DIR" "$DISK" "$BOOT_MODE" "$RENDER_DIR"
+DISKO_CONFIG="$RENDER_DIR/disko-config.nix"
 
 echo "[3] Disko plan (dry run, nothing is written yet)..."
 nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko/latest -- \
@@ -79,31 +72,8 @@ cp "$SCRIPT_DIR/flake.nix" /mnt/etc/nixos/flake.nix
 cp -r "$SCRIPT_DIR/modules" /mnt/etc/nixos/
 cp "$DISKO_CONFIG" /mnt/etc/nixos/disko-config.nix
 
-echo "[7] Generate boot.nix..."
-if [[ "$BOOT_MODE" == "uefi" ]]; then
-  cat > /mnt/etc/nixos/boot.nix <<'EOF'
-{ ... }:
-{
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.useOSProber = true;
-  boot.loader.grub.efiSupport = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-}
-EOF
-else
-  # Don't set boot.loader.grub.device here: disko already configures
-  # boot.loader.grub.devices from the EF02 (bios-boot) partition. Setting
-  # both causes the same disk to appear twice in mirroredBoots and trips
-  # the "duplicated devices in mirroredBoots" assertion.
-  cat > /mnt/etc/nixos/boot.nix <<EOF
-{ ... }:
-{
-  boot.loader.grub.enable = true;
-  boot.loader.grub.useOSProber = true;
-}
-EOF
-fi
+echo "[7] Copy boot.nix..."
+cp "$RENDER_DIR/boot.nix" /mnt/etc/nixos/boot.nix
 
 echo "[8] Install..."
 NIX_CONFIG="experimental-features = nix-command flakes" \
