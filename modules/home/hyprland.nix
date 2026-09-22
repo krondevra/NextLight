@@ -131,6 +131,7 @@
         "$mainMod, P, pseudo,"
         "$mainMod, J, togglesplit,"
         "$mainMod, F, exec, firefox"
+        "$mainMod, L, exec, hyprlock"
 
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"

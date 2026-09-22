@@ -8,8 +8,7 @@
     settings = {
       background = {
         monitor = "";
-        path = "screenshot";
-        blur_passes = 2;
+        color = "rgba(25, 20, 20, 1.0)";
       };
 
       "input-field" = {
@@ -18,8 +17,8 @@
         outline_thickness = 3;
         dots_size = 0.2;
         dots_spacing = 0.3;
-        outer_color = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        inner_color = "rgba(0, 0, 0, 0.6)";
+        outer_color = "rgb(200, 200, 200)";
+        inner_color = "rgba(50, 50, 50, 0.9)";
         font_color = "rgb(255, 255, 255)";
         fade_on_empty = true;
         placeholder_text = "<i>Password...</i>";

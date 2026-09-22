@@ -61,6 +61,7 @@ in
 
         modules-right = [
           "battery"
+          "network"
           "pulseaudio"
           "backlight"
           "keyboard-state"
@@ -99,8 +100,9 @@ in
 
         clock = {
           timezone = "Europe/Riga";
+          interval = 1;
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          format = "{:%H:%M\n%Y-%m-%d}";
+          format = "{:%H:%M:%S\n%d.%m.%Y}";
         };
 
         cpu = {
@@ -137,9 +139,18 @@ in
           format-icons = [ "" "" "" "" "" ];
         };
 
+        network = {
+          format-wifi = "";
+          format-ethernet = "";
+          format-disconnected = "⚠";
+          tooltip-format-wifi = "{essid} ({signalStrength}%)";
+          tooltip-format-ethernet = "{ipaddr}/{cidr}";
+          tooltip-format-disconnected = "Disconnected";
+        };
+
         pulseaudio = {
-          format = "{icon} {volume}%";
-          format-bluetooth = "{icon} {volume}%";
+          format = "{icon}";
+          format-bluetooth = "{icon}";
           format-bluetooth-muted = "{icon} ";
           format-muted = "󰝟";
           tooltip-format = "Volume: {volume}%";
@@ -170,7 +181,7 @@ in
         "custom/gpu" = {
           exec = "${gpuScript}";
           interval = 2;
-          format = "󰢮 {}%";
+          format = " {}%";
           tooltip = false;
         };
       };
@@ -189,6 +200,7 @@ in
 
       #clock,
       #battery,
+      #network,
       #pulseaudio,
       #tray,
       #backlight,
