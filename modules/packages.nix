@@ -8,6 +8,8 @@
     firefox                   # Web Browser
     git                       # Version Control
     grim                      # Wayland Screenshot Tool
+    hypridle                  # Hyprland Idle Daemon
+    hyprlock                  # Hyprland Lock Screen
     hyprpaper                 # Wallpaper Utility
     kitty                     # GPU Accelerated Terminal
     pavucontrol               # Audio Control GUI

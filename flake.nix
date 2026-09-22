@@ -50,6 +50,8 @@
                 ./modules/home/fastfetch.nix
                 ./modules/home/zsh.nix
                 ./modules/home/waybar.nix
+                ./modules/home/hypridle.nix
+                ./modules/home/hyprlock.nix
               ];
               home.stateVersion = "25.11";
             };
