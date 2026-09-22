@@ -92,11 +92,14 @@ if [[ "$BOOT_MODE" == "uefi" ]]; then
 }
 EOF
 else
+  # Don't set boot.loader.grub.device here: disko already configures
+  # boot.loader.grub.devices from the EF02 (bios-boot) partition. Setting
+  # both causes the same disk to appear twice in mirroredBoots and trips
+  # the "duplicated devices in mirroredBoots" assertion.
   cat > /mnt/etc/nixos/boot.nix <<EOF
 { ... }:
 {
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "$DISK";
   boot.loader.grub.useOSProber = true;
 }
 EOF
