@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.zsh = {
@@ -24,20 +24,21 @@
       }
     ];
 
-    initExtraFirst = ''
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
-    '';
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
+      '')
+      ''
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-    initExtra = ''
-      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-      bindkey "^[[1;5D" backward-word
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[5D" backward-word
-      bindkey "^[[5C" forward-word
-    '';
+        bindkey "^[[1;5D" backward-word
+        bindkey "^[[1;5C" forward-word
+        bindkey "^[[5D" backward-word
+        bindkey "^[[5C" forward-word
+      ''
+    ];
   };
 
   home.file.".p10k.zsh".source = ./p10k.zsh;
