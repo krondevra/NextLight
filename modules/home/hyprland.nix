@@ -18,7 +18,6 @@
       env = [
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
-        "WLR_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
       ];
 
       general = {
