@@ -13,6 +13,8 @@
     user = "greeter";
   };
 
+  hardware.graphics.enable = true;
+
   security.polkit.enable = true;
   security.pam.services.hyprlock = { }; # Required for hyprlock to authenticate
   services.dbus.enable = true;
