@@ -1,4 +1,4 @@
-# NixOS-installer
+# NextLight
 
 A personal NixOS flake: an installer plus a Hyprland desktop configuration,
 managed declaratively through `nixosConfigurations` + home-manager.
