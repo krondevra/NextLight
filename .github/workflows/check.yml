@@ -19,5 +19,8 @@ jobs:
           ./scripts/render-boot-config.sh . /dev/vda ${{ matrix.boot_mode }} "$tmp"
           cp "$tmp/disko-config.nix" ./disko-config.nix
           cp "$tmp/boot.nix" ./boot.nix
+          # Nix's local flake evaluation only sees git-tracked content;
+          # boot.nix is a new file, so it must be staged to be visible.
+          git add boot.nix disko-config.nix
       - name: nix flake check
         run: nix flake check --no-build
