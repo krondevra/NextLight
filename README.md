@@ -35,6 +35,14 @@ and asks for a second confirmation before applying it.
 To iterate on the config after install, edit `modules/` on the installed
 system and run `sudo nixos-rebuild switch --flake /etc/nixos#nixos`.
 
+## Checks
+
+`.github/workflows/check.yml` runs `nix flake check --no-build` on every
+push/PR — it evaluates `nixosConfigurations.nixos` (assertions included)
+without building the closure, so a broken module or a bad interaction like
+disko/grub duplicating boot devices gets caught in CI instead of mid-install.
+Run the same check locally with `nix flake check --no-build`.
+
 ## Status
 
 - **Verified end-to-end in a VM:** disk partitioning/LUKS/btrfs, base system
