@@ -23,6 +23,5 @@
     wl-clipboard              # Clipboard Tool
     wofi                      # Application Launcher
     networkmanagerapplet
-    blueman
   ];
 }

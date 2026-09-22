@@ -46,6 +46,10 @@
 
   hardware.sensor.iio.enable = true;            # Sensor Proxy For Orientation
 
+  hardware.bluetooth.enable = true;             # Bluetooth Radio
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;               # Bluetooth Applet + D-Bus Policy
+
   services.syncthing.enable = true;             # File Synchronization
 
   virtualisation.libvirtd.enable = true;        # VM Backend
