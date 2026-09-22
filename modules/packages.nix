@@ -2,6 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    brightnessctl             # Backlight Control CLI
     curl                      # Data Transfer Tool
     dunst                     # Notification Daemon
     fastfetch                 # About System

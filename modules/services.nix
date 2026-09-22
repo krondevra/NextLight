@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
   fileSystems."/".options = lib.mkAfter [ "noatime" ];
@@ -49,6 +49,8 @@
   hardware.bluetooth.enable = true;             # Bluetooth Radio
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;               # Bluetooth Applet + D-Bus Policy
+
+  services.udev.packages = [ pkgs.brightnessctl ]; # Backlight Write Permission For Non-Root
 
   services.syncthing.enable = true;             # File Synchronization
 
